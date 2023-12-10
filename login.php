@@ -24,7 +24,7 @@
     }
 
     .card-header {
-        background-color: #17a2b8;
+        background-color: #007bff;
         color: #fff;
         text-align: center;
         border-bottom: none;
@@ -38,7 +38,7 @@
     }
 
     .btn-login {
-        background-color: #17a2b8;
+        background-color: #007bff;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -47,7 +47,7 @@
     }
 
     .btn-login:hover {
-        background-color: #138496;
+        background-color: #67abf5;
     }
     </style>
 </head>
@@ -59,19 +59,19 @@
             <div class="col-md-4 login-container">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Login to Your Account</h3>
+                        <h3>Consultez vos résultats</h3>
                     </div>
                     <div class="card-body">
                         <form action="server.php" method="post">
                             <div class="form-group">
-                                <label for="login">login</label>
+                                <label for="login"><b>Login</b></label>
                                 <input type="text" class="form-control" id="login" name="login" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
+                                <label for="password"><b>Mot de passe</b></label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-login btn-block">Login</button>
+                            <button type="submit" class="btn btn-login btn-block">connexion</button>
                         </form>
                     </div>
                 </div>

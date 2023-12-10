@@ -1,5 +1,6 @@
 <?php
-$SERVER_PATH =  "file:///C:/xampp/htdocs/result_server_data/data";
+session_start();
+$SERVER_URL = "C:/xampp/htdocs/result_server_data/data/";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $directory = "./data";
@@ -27,35 +28,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'timestamp' => $timestamp,
             'codeLabo' => $codeLabo,
             'numDemande' => $numDemande,
-            'filename' => $SERVER_PATH.'/'.$filename
+            'filename' => $filename
         );
 
         array_push($userData, $user);
         array_push($codeLabosArray, $codeLabo);
     }
 
+    usort($userData, function($a, $b) {
+        return strtotime($a['timestamp']) - strtotime($b['timestamp']);
+    });
 
     $files = array();
     $userFound = false;
     foreach ($userData as $user) {
         if ($user['login'] === $userLogin ) {
-            //get ALL user's files
-            $files[]= $user['filename'];
-            //connect user with the correct password
+
+            $doc = [ $user['filename'], $user['codeLabo']];
+            array_push($files, $doc);
+
             if ($user['password'] === $userPassword) {
                 $userFound = true; 
+                $cookieName = "user_found";
+                $cookieValue = $user['login'];
+                $cookieExpiration = time() + 3600; // Cookie expires in 1 hour
+                setcookie($cookieName, $cookieValue, $cookieExpiration, "/");
             }
         }
     }
-    foreach ($files as $document) {
-        echo $document . "<br>";
+
+    if($userFound) {
+        $codeLabosArray = json_encode($codeLabosArray);
+        $_SESSION['files'] = $files;
+        $_SESSION['codeLabosArray'] = $codeLabosArray;
+        header('Location: index.php');
+        exit();
     }
-    foreach ($codeLabosArray as $document) {
-        echo $document . "<br>";
-    }
-    // Display result for invalid login or password
+ 
     if (!$userFound) {
         echo "Invalid login or password.";
+        header('Location: login.php');
     }
 }
 ?>
