@@ -1,14 +1,11 @@
 <?php
     // Start the session
     session_start();
-    // Check if user data is set in the session
     if (!isset($_COOKIE['user_found'])) {
-        // Redirect to the login page or display an error message
         header('Location: login.php');
         exit();
     }
 
-    // Retrieve user data from the session
     $codeLabosArray = $_SESSION['codeLabosArray'];
     $files = $_SESSION['files'];
 ?>
@@ -133,13 +130,9 @@
         <select id="categoryFilter" class="category-filter" onchange="filterPDFs()">
             <option value="all">Tous les laboratoires</option>
             <?php
-        // List of PDF files with categories (replace these with your actual file names and categories)
         $pdfFiles = $files;
 
-        // Get unique categories
         $categories = array_unique(array_column($pdfFiles, 1));
-
-        // Generate options for each category
         foreach ($categories as $category) {
             echo '<option value="' . $category . '">' . ucfirst($category) . '</option>';
         }
@@ -149,12 +142,10 @@
 
     <div class="pdf-list" id="pdfList">
         <?php
-    // Sort the PDF files by category and then by name
     usort($pdfFiles, function($a, $b) {
         return $a[1] <=> $b[1] ?: strcasecmp($a[0], $b[0]);
     });
 
-    // Loop through the sorted PDF files and display icons
     foreach ($pdfFiles as $pdfFile) {
         echo '<div class="pdf-item" data-category="' . $pdfFile[1] . '">';
         echo '<div class="pdf-icon"><a href="'.$pdfFile[0].'" target="_blank"><i class="fas fa-file-pdf"></i></a></div>';
