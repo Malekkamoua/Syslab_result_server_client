@@ -2,8 +2,8 @@
     // Start the session
     session_start();
     // Check if user data is set in the session
-    if (!isset($_SESSION['files'])) {
-        // Redirect to the login page if user data is not set
+    if (!isset($_COOKIE['user_found'])) {
+        // Redirect to the login page or display an error message
         header('Location: login.php');
         exit();
     }
@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Showcase</title>
+    <title> Serveur de résultats | Syslab</title>
     <!-- Link to Font Awesome CSS (make sure you have an internet connection) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
