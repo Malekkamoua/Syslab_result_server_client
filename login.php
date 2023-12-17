@@ -1,3 +1,14 @@
+<?php
+    // Start the session
+    session_start();
+  
+    if (isset($_SESSION['message'])) {
+        $message = $_SESSION['message'];
+    }else{  
+        $message = "";
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,6 +73,9 @@
                         <h3>Consultez vos résultats</h3>
                     </div>
                     <div class="card-body">
+                        <?php
+                                echo '<h6 style="color:red;">'. $message .'</h6>';
+                        ?>
                         <form action="server.php" method="post">
                             <div class="form-group">
                                 <label for="login"><b>Login</b></label>

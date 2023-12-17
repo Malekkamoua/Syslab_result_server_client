@@ -1,12 +1,14 @@
 <?php
 session_start();
+
 $SERVER_URL = "C:/xampp/htdocs/result_server_data/data/";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
     $directory = "./data";
-    
-    $userLogin = $_POST['login'];
-    $userPassword = $_POST['password'];
+
+    //Accepte les paramètres de la request
+    $userIDToSearch = $_POST['login'];
+    $passwordToSearch = $_POST['password'];
 
     $filenames = scandir($directory);
     $filenames = array_diff($filenames, array('.', '..'));
@@ -14,15 +16,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userData = array();
     $codeLabosArray = array();
 
+    $userGroups = [];
+
+    //Parcourt la liste des fichiers existants
+    //Crée la liste des triplet (userID,password,index) existants
+    
     foreach ($filenames as $filename) {
-        $dataArray = explode("-", $filename);
-        $timestamp = $dataArray[0];
-        $codeLabo = $dataArray[1];
-        $login = $dataArray[2];
-        $password = $dataArray[3];
+        list($timestamp, $codeLabo, $userID, $password, $index) = explode('-', $filename);
+
+        if (!isset($userGroups[$userID])) {
+            $userGroups[$userID] = [];
+        }
+
+        $currentIndex = intval($index);
+        if (!isset($userGroups[$userID]['index']) || $currentIndex > $userGroups[$userID]['index']) {
+            $userGroups[$userID] = [
+                'userID' => $userID,
+                'password' => $password,
+                'index' => basename($password.$index, ".pdf")
+            ];
+        }
 
         $user = array(
-            'login' => $login,
+            'login' => $userID,
             'password' => $password,
             'timestamp' => $timestamp,
             'codeLabo' => $codeLabo,
@@ -33,39 +49,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         array_push($codeLabosArray, $codeLabo);
     }
 
-    usort($userData, function($a, $b) {
-        return strtotime($a['timestamp']) - strtotime($b['timestamp']);
-    });
-
-    $files = array();
+    //Vérifie les accès de l'utilisateur
+    //S'il existe, crée la liste de ses fichiers
     $userFound = false;
-    foreach ($userData as $user) {
-        if ($user['login'] === $userLogin ) {
+    foreach ($userGroups as $user) {
 
-            $doc = [ $user['filename'], $user['codeLabo']];
-            array_push($files, $doc);
+        if ($user['userID'] === $userIDToSearch && $user['password'] === $passwordToSearch) {
+            $userFound = true;
+            $cookieName = "user_found";
+            $cookieValue = $user['userID'];
+            $cookieExpiration = time() + 3600; // Cookie expires in 1 hour
+            setcookie($cookieName, $cookieValue, $cookieExpiration, "/");
 
-            if ($user['password'] === $userPassword) {
-                $userFound = true; 
-                $cookieName = "user_found";
-                $cookieValue = $user['login'];
-                $cookieExpiration = time() + 3600; // Cookie expires in 1 hour
-                setcookie($cookieName, $cookieValue, $cookieExpiration, "/");
+            usort($userData, function($a, $b) {
+                return strtotime($a['timestamp']) - strtotime($b['timestamp']);
+            });
+
+            $files = array();
+
+            foreach ($userData as $user) {
+                if ($user['login'] === $userIDToSearch ) {
+                    $doc = [ $user['filename'], $user['codeLabo']];
+                    array_push($files, $doc);
+                }
             }
         }
     }
 
-    if($userFound) {
+    if (!$userFound) {
+        $_SESSION['message'] = "Mot de passe ou login incorrect";
+        header('Location: login.php');
+    } else {
         $codeLabosArray = json_encode($codeLabosArray);
         $_SESSION['files'] = $files;
         $_SESSION['codeLabosArray'] = $codeLabosArray;
+        $_SESSION['message'] = "";
         header('Location: index.php');
         exit();
-    }
- 
-    if (!$userFound) {
-        echo "Invalid login or password.";
-        header('Location: login.php');
     }
 }
 ?>

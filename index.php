@@ -130,13 +130,13 @@
         <select id="categoryFilter" class="category-filter" onchange="filterPDFs()">
             <option value="all">Tous les laboratoires</option>
             <?php
-        $pdfFiles = $files;
+                $pdfFiles = $files;
 
-        $categories = array_unique(array_column($pdfFiles, 1));
-        foreach ($categories as $category) {
-            echo '<option value="' . $category . '">' . ucfirst($category) . '</option>';
-        }
-        ?>
+                $categories = array_unique(array_column($pdfFiles, 1));
+                foreach ($categories as $category) {
+                    echo '<option value="' . $category . '">' . ucfirst($category) . '</option>';
+                }
+            ?>
         </select>
     </div>
 
