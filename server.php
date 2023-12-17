@@ -28,12 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $userGroups[$userID] = [];
         }
 
-        $currentIndex = intval($index);
-        if (!isset($userGroups[$userID]['index']) || $currentIndex > $userGroups[$userID]['index']) {
+        if (!isset($userGroups[$userID]['index']) || $timestamp > $userGroups[$userID]['timestamp']) {
             $userGroups[$userID] = [
                 'userID' => $userID,
                 'password' => $password,
-                'index' => basename($password.$index, ".pdf")
+                'timestamp' => $timestamp
             ];
         }
 
