@@ -18,16 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dataArray = explode("-", $filename);
         $timestamp = $dataArray[0];
         $codeLabo = $dataArray[1];
-        $numDemande = $dataArray[2];
-        $login = $dataArray[3];
-        $password = $dataArray[4];
+        $login = $dataArray[2];
+        $password = $dataArray[3];
 
         $user = array(
             'login' => $login,
             'password' => $password,
             'timestamp' => $timestamp,
             'codeLabo' => $codeLabo,
-            'numDemande' => $numDemande,
             'filename' => $filename
         );
 
