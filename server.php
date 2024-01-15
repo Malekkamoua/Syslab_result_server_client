@@ -1,8 +1,6 @@
 <?php
 session_start();
 
-$SERVER_URL = "C:/xampp/htdocs/result_server_data/data/";
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $directory = "./data";
 
@@ -18,11 +16,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $userGroups = [];
 
+    $medical_disciplines = array(
+        27 => "Biochimie",
+        28 => "Bactériologie",
+        29 => "Parasitologie",
+        30 => "Hématologie",
+        31 => "Immunologie",
+        82 => "Virologie"
+    );
+
+    echo $medical_disciplines[28]; 
+
     //Parcourt la liste des fichiers existants
     //Crée la liste des triplet (userID,password,index) existants
     
     foreach ($filenames as $filename) {
-        list($timestamp, $codeLabo, $userID, $password, $index) = explode('-', $filename);
+        list($demande, $timestamp, $codeLabo, $userID, $password, $index) = explode('-', $filename);
 
         if (!isset($userGroups[$userID])) {
             $userGroups[$userID] = [];
@@ -68,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             foreach ($userData as $user) {
                 if ($user['login'] === $userIDToSearch ) {
-                    $doc = [ $user['filename'], $user['codeLabo']];
+                    $doc = [ $user['filename'], $user['codeLabo'], $medical_disciplines[$user['codeLabo']]];
                     array_push($files, $doc);
                 }
             }
