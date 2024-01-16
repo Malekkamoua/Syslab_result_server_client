@@ -195,6 +195,7 @@
             $formattedDate = $dateTime->format('d/m/Y');   
     
             $groupedPDFs[$formattedDate][] = [
+                'filename' => $pdfFile[0],
                 'demande' => $demande,
                 'index' => str_replace(".pdf", "", $index),
                 'formattedDate' => $formattedDate,
@@ -211,7 +212,7 @@
                     <?php foreach ($pdfGroup as $pdfItem): ?>
                         <div class="pdf-item" data-category="<?php echo $pdfItem['codeLabo']; ?>">
                             <div class="pdf-icon">
-                                <a href="<?php echo $pdfItem['demande']; ?>" target="_blank">
+                                <a href="<?php echo $pdfItem['filename']; ?>" target="_blank">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
                             </div>
