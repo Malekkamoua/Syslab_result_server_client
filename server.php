@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     //Accepte les paramètres de la request
     $userIDToSearch = $_POST['login'];
-    $passwordToSearch = $_POST['password'];
+    $passwordToSearch = $_POST['recu'].$_POST['password'];
 
     $filenames = scandir($directory);
     $filenames = array_diff($filenames, array('.', '..'));
@@ -25,8 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         82 => "Virologie"
     );
 
-    echo $medical_disciplines[28]; 
-
     //Parcourt la liste des fichiers existants
     //Crée la liste des triplet (userID,password,index) existants
     
@@ -40,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!isset($userGroups[$userID]['index']) || $timestamp > $userGroups[$userID]['timestamp']) {
             $userGroups[$userID] = [
                 'userID' => $userID,
-                'password' => $password,
-                'timestamp' => $timestamp
+                'password' => $demande.$password,
+                'timestamp' => $timestamp,
             ];
         }
 
@@ -61,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //S'il existe, crée la liste de ses fichiers
     $userFound = false;
     foreach ($userGroups as $user) {
-
         if ($user['userID'] === $userIDToSearch && $user['password'] === $passwordToSearch) {
             $userFound = true;
             $cookieName = "user_found";

@@ -27,8 +27,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Serveur de résultats | Syslab</title>
     <link rel="stylesheet" href="./all.min.css">
-    <link rel="stylesheet" href="./all.min.css">
-    <link rel="stylesheet" href="./all.min.css">
     <link rel="stylesheet" href="./bootstrap.min.css">
     <style>
         body {
@@ -141,23 +139,25 @@
 <body>
 
     <header>
-        <h2>Hôpital militaire principal d'instruction de Tunis</h2>
+        <h2 id="header-text">Hôpital militaire principal d'instruction de Tunis</h2>
         <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </header>
 
     <nav>
-        <a href="#">À propos</a>
+        <a href="#" onclick="changeLanguage('ar')">AR</a>
+        <a href="#" onclick="changeLanguage('fr')">FR</a>
+        <a href="#" onclick="changeLanguage('en')">EN</a>
         <a href="#">Contact</a>
     </nav>
 
     <div class="showcase">
-        <p>Services des laboratoires de biologies médicales - Serveur de résultats</p>
+        <p id="showcase-text">Services des laboratoires de biologies médicales - Serveur de résultats</p>
     </div>
 
     <div class="filter-container">
-        <label for="categoryFilter">Filtrer par laboratoire:</label>
+        <label for="categoryFilter"  id="filter-text">Filtrer par laboratoire:</label>
         <select id="categoryFilter" class="category-filter" onchange="filterPDFs()">
-            <option value="all">Tous les laboratoires</option>
+            <option value="all"  id="filter-all-text">Tous les laboratoires</option>
             <?php
                 $pdfFiles = $files;
                 $uniqueCombinations = array_unique(array_map(function($item) {
@@ -207,7 +207,7 @@
     <?php foreach ($groupedPDFs as $date => $pdfGroup): ?>
         <?php if (!empty($pdfGroup)): ?>
             <div class="pdf-group">
-                <div class="pdf-group-title"><?php echo "Date de publication: ".$date; ?></div>
+                <div class="pdf-group-title pdf-group-text"><?php echo $date; ?></div>
                 <div class="pdf-list">
                     <?php foreach ($pdfGroup as $pdfItem): ?>
                         <div class="pdf-item" data-category="<?php echo $pdfItem['codeLabo']; ?>">
@@ -230,9 +230,9 @@
                                 // Format the DateTime object as needed
                                 $formattedDateDemande = $dateTime->format('d/m/Y');
 
-                                echo 'Demande du: '. $formattedDateDemande .'<br>';
-                                echo   $medical_disciplines[$pdfItem['codeLabo']] .'<br>';
-                                echo 'Document N°: '. $pdfItem['index'] .'<br>';
+                                echo  '<b class="demande-text">Demande du: </b>'. $formattedDateDemande .'<br>';
+                                echo  '<b class="codelab-text"></b>'. $medical_disciplines[$pdfItem['codeLabo']] .'<br>';
+                                echo  '<b class="doc-text"> Document du: </b>'. $pdfItem['index'] .'<br>';
                             ?></p>
                         </div>
                     <?php endforeach; ?>
@@ -243,16 +243,16 @@
 
     <script>
          function filterPDFs() {
-        var categoryFilter = document.getElementById('categoryFilter');
-        var selectedCategory = categoryFilter.value;
+        let categoryFilter = document.getElementById('categoryFilter');
+        let selectedCategory = categoryFilter.value;
 
-        var pdfGroups = document.querySelectorAll('.pdf-group');
+        let pdfGroups = document.querySelectorAll('.pdf-group');
         pdfGroups.forEach(function(pdfGroup) {
-            var pdfItems = pdfGroup.querySelectorAll('.pdf-item');
-            var hasVisibleItems = false;
+            let pdfItems = pdfGroup.querySelectorAll('.pdf-item');
+            let hasVisibleItems = false;
 
             pdfItems.forEach(function(pdfItem) {
-                var itemCategory = pdfItem.getAttribute('data-category');
+                let itemCategory = pdfItem.getAttribute('data-category');
 
                 if (selectedCategory === 'all' || selectedCategory === itemCategory) {
                     pdfItem.style.display = 'block';
@@ -262,7 +262,7 @@
                 }
             });
 
-            var datePublicationSection = pdfGroup.querySelector('.pdf-group-title');
+            let datePublicationSection = pdfGroup.querySelector('.pdf-group-title');
 
             // Hide date publication section if there are no visible pdf items
             if (hasVisibleItems) {
@@ -276,6 +276,68 @@
         function logout() {
             document.cookie = 'user_found=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             window.location.href = 'login.php?logout=true';
+        }
+        window.onload = function () {
+                    changeLanguage('ar');
+        };
+        function changeLanguage(language) {
+            let headerText = document.getElementById('header-text');
+            let showcaseText = document.getElementById('showcase-text');
+            let demandeText = document.getElementsByClassName('demande-text');
+            let docText = document.getElementsByClassName('doc-text');
+            let pdftext = document.getElementsByClassName('pdf-group-text');
+
+            switch (language) {
+                case 'ar':
+                    document.documentElement.lang = 'ar';
+                    document.documentElement.dir = 'rtl';
+                    headerText.textContent = "مستشفى القوات المسلحة الرئيسي للتعليم بتونس";
+                    showcaseText.textContent = "خدمات مختبرات الأحياء الطبية - خادم النتائج";
+                    for (let i = 0; i < pdftext.length; i++) {
+                        pdftext[i].textContent = "تاريخ النشر: " + pdftext[i].textContent
+                    }
+                    for (let i = 0; i < docText.length; i++) {
+                        docText[i].textContent = "رقم الوثيقة : "
+                    }
+                    for (let i = 0; i < demandeText.length; i++) {
+                        demandeText[i].textContent = "تاريخ الطلب: "
+                    }   
+                    break;
+                case 'fr':
+                    document.documentElement.lang = 'fr';
+                    document.documentElement.dir = 'ltr';
+                    headerText.textContent = "Hôpital militaire principal d'instruction de Tunis";
+                    showcaseText.textContent = "Services des laboratoires de biologies médicales - Serveur de résultats";
+                    for (let i = 0; i < pdftext.length; i++) {
+                        pdftext[i].textContent = "Date de publication: " + pdftext[i].textContent
+                    }
+                    for (let i = 0; i < docText.length; i++) {
+                        docText[i].textContent = "Document N°: "
+                    }
+                    for (let i = 0; i < demandeText.length; i++) {
+                        demandeText[i].textContent = "Demande du: "
+                    }             
+                    break;
+                case 'en':
+                    document.documentElement.lang = 'en';
+                    document.documentElement.dir = 'ltr';
+                    headerText.textContent = "Main Military Teaching Hospital of Tunis";
+                    showcaseText.textContent = "Medical Biology Laboratories Services - Results Server";
+                    for (let i = 0; i < pdftext.length; i++) {
+                        pdftext[i].textContent = "Date of publication: "+ pdftext[i].textContent
+                    }
+                    for (let i = 0; i < demandeText.length; i++) {
+                        demandeText[i].textContent = "Request of: "
+                    }
+                    for (let i = 0; i < docText.length; i++) {
+                        docText[i].textContent = "Document N°: "
+                    }
+                    break;
+                default:
+                    headerText.textContent = "Main Military Teaching Hospital of Tunis";
+                    showcaseText.textContent = "Medical Biology Laboratories Services - Results Server";
+                    break;
+            }
         }
     </script>
 
