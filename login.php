@@ -109,11 +109,10 @@
         <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </header>
 
-    <nav>
+    <nav style="display: flex; align-items: center; justify-content: center; background-color: #343a40; padding: 10px; text-align: center">
         <a href="#" onclick="changeLanguage('ar')">AR</a>
         <a href="#" onclick="changeLanguage('fr')">FR</a>
         <a href="#" onclick="changeLanguage('en')">EN</a>
-        <a href="#">Contact</a>
     </nav>
 
     <div class="showcase">
@@ -155,49 +154,7 @@
 
     <script src="./jquery-3.7.1.slim.min.js"></script>
     <script src="./bootstrap.min.js"></script>
-    <script>
-         window.onload = function () {
-            changeLanguage('ar');
-        };
-        function changeLanguage(language) {
-            var headerText = document.getElementById('header-text');
-            var showcaseText = document.getElementById('showcase-text');
-
-            switch (language) {
-                case 'ar':
-                    headerText.textContent = "مستشفى القوات المسلحة الرئيسي للتعليم بتونس";
-                    showcaseText.textContent = "خدمات مختبرات الأحياء الطبية - خادم النتائج";
-                    titreText.textContent = "اطلع على نتائجك"; 
-                    recuText.textContent = "رقم الاستلام"; 
-                    passwordText.textContent = "كلمة المرور"; 
-                    loginText.textContent = "رقم الهاتف"; 
-                    cnxText.textContent = "دخول";
-                    break;
-                case 'fr':
-                    headerText.textContent = "Hôpital militaire principal d'instruction de Tunis";
-                    showcaseText.textContent = "Services des laboratoires de biologies médicales - Serveur de résultats";
-                    titreText.textContent = "Consultez vos résultats";
-                    recuText.textContent = "N° reçu";
-                    passwordText.textContent = "Mot de passe";
-                    loginText.textContent = "N° Telephone";
-                    cnxText.textContent = "Connexion";
-                    break;
-                case 'en':
-                    headerText.textContent = "Main Military Teaching Hospital of Tunis";
-                    showcaseText.textContent = "Medical Biology Laboratories Services - Results Server";
-                    titreText.textContent = "Check your results";
-                    recuText.textContent = "File number";
-                    passwordText.textContent = "Password";
-                    loginText.textContent = "Phone number";
-                    cnxText.textContent = "Connect";
-                    break;
-                default:
-                    headerText.textContent = "Main Military Teaching Hospital of Tunis";
-                    showcaseText.textContent = "Medical Biology Laboratories Services - Results Server";
-                    break;
-            }
-        }
-    </script>
+    <script src="./login_trans.js"></script>
 </body>
 
 </html>
